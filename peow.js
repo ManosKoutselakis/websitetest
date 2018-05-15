@@ -12,6 +12,7 @@ canvas.height = dimension[1];
 
 function Cube(x, y, width, height, speed, color)
 {
+    var foo = 25;
     this.x = x;
     this.y = y;
     this.width = width;
@@ -22,6 +23,7 @@ function Cube(x, y, width, height, speed, color)
 
     this.draw = function ()
     {
+        foo = 23;
         c.fillStyle = this.color;
         c.fillRect(this.x, this.y, this.width, this.height)
     }
@@ -227,53 +229,105 @@ function drawCubeAtMousePos(e)
 
 }
 
-function expandFire()
+function createArrayOfImageData()
 {
+
+    var newArray = [];
+
+    var x = 0;
+    var y = 0;
     for (let i = 0; i < canvas.width; i += step)
     {
+        newArray.push([]);
+        y = 0;
         for (let j = 0; j < canvas.height; j += step)
         {
-            var pixelData = c.getImageData(i, j, 1, 1).data;
-            if (pixelData[0] == 74)
+
+            newArray[x].push(c.getImageData(i, j, 1, 1).data[0]);
+            y += 1;
+            //     newArray[i].push(c.getImageData(i, j, 1, 1).data[0]);
+        }
+        x += 1;
+    }
+    // console.log(newArray);
+    return newArray;
+}
+
+// var arrayN = createArrayOfImageData();
+function expandFire()
+{
+    var arrayN = createArrayOfImageData();
+    var maxWidth = Math.floor(canvas.width / step);
+    var maxHeight = Math.floor(canvas.height / step);
+    var x = 0;
+    var y = 0;
+    c.fillStyle = 'rgba(78,78,105,1)';
+    for (let i = 0; i < canvas.width; i += step)
+    {
+        y = 0;
+        for (let j = 0; j < canvas.height; j += step)
+        {
+            // var pixelData = c.getImageData(i, j, 1, 1).data;
+            // if (pixelData[0] == 74)
+            if (arrayN[x][y] == 74)
             {
                 // c.fillStyle = 'rgba(203,23,23,23)';
                 // c.fillRect(i, j, step, step, 1);
-                if (c.getImageData(i - step, j, 1, 1).data[0] == 47)
+                // if (c.getImageData(i - step, j, 1, 1).data[0] == 47)
+                if (x > 0)
                 {
-                    c.fillStyle = 'rgba(78,78,105,1)';
-                    c.fillRect(i - step, j, step, step, 1);
+                    if (arrayN[x - 1][y] == 47)
+                    {
+                        c.fillRect(i - step, j, step, step, 1);
+                    }
                 }
-                if (c.getImageData(i + step, j, 1, 1).data[0] == 47)
+                // if (c.getImageData(i + step, j, 1, 1).data[0] == 47)
+                if (x < maxWidth)
+                    if (arrayN[x + 1][y] == 47)
+                    {
+                        c.fillRect(i + step, j, step, step, 1);
+                    }
+                // if (c.getImageData(i, j - step, 1, 1).data[0] == 47)
+                if (y > 0)
                 {
-                    c.fillStyle = 'rgba(78,78,105,1)';
-                    c.fillRect(i + step, j, step, step, 1);
+                    if (arrayN[x][y - 1] == 47)
+                    {
+                        c.fillRect(i, j - step, step, step, 1);
+                    }
                 }
-                if (c.getImageData(i, j - step, 1, 1).data[0] == 47)
+                if (y < maxHeight)
                 {
-                    c.fillStyle = 'rgba(78,78,105,1)';
-                    c.fillRect(i, j - step, step, step, 1);
-                }
-                if (c.getImageData(i, j + step, 1, 1).data[0] == 47)
-                {
-                    c.fillStyle = 'rgba(78,78,105,1)';
-                    c.fillRect(i, j + step, step, step, 1);
+                    // if (c.getImageData(i, j + step, 1, 1).data[0] == 47)
+                    if (arrayN[x][y + 1] == 47)
+                    {
+                        c.fillRect(i, j + step, step, step, 1);
+                    }
                 }
             }
+            y += 1;
         }
+        x += 1;
     }
+
+    x = 0;
+    c.fillStyle = 'rgba(74,78,105,1)';
     for (let i = 0; i < canvas.width; i += step)
     {
+        y = 0;
         for (let j = 0; j < canvas.height; j += step)
         {
-            var pixelData = c.getImageData(i, j, 1, 1).data;
-            if (pixelData[0] == 78)
+            // var pixelData = c.getImageData(i, j, 1, 1).data;
+            // if (pixelData[0] == 78)
+            if (arrayN[x][y] == 78)
             {
-                c.fillStyle = 'rgba(74,78,105,1)';
                 c.fillRect(i, j, step, step, 1);
             }
+            y += 1;
         }
+        x += 1;
     }
 }
+
 
 // setInterval(expandFire, 50);
 
